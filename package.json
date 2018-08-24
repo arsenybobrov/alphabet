@@ -1,0 +1,16 @@
+{
+    "title": "vorfreude",
+    "name": "vorfreude",
+    "version": "1.0.0",
+    "devDependencies": {
+        "browser-sync": "^2.24.4",
+        "gulp": "^3.9.1",
+        "gulp-clean-css": "3.9.2",
+        "gulp-concat": "^2.6.1",
+        "gulp-header": "2.0.1",
+        "gulp-rename": "^1.2.2",
+        "gulp-replace": "^1.0.0",
+        "gulp-sass": "^3.1.0",
+        "gulp-uglify": "3.0.0"
+    }
+}
