@@ -7,6 +7,7 @@ var uglify = require('gulp-uglify');
 var browserSync = require('browser-sync').create();
 var concat = require('gulp-concat');
 var replace = require('gulp-replace');
+var clean = require('gulp-clean');
 
 // Compile SCSS
 gulp.task('css:compile', function() {
@@ -85,6 +86,28 @@ gulp.task('copy:fonts', function () {
 // Copy task
 gulp.task('copy', ['copy:images', 'copy:fonts']);
 
+
+// Delete dist
+gulp.task('clean:html', function () {
+  return gulp.src('dist/*.html', {read: false})
+    .pipe(clean());
+});
+
+// Delete images
+gulp.task('clean:images', function () {
+  return gulp.src('dist/images/*', {read: false})
+    .pipe(clean());
+});
+
+// Delete fonts
+gulp.task('clean:fonts', function () {
+  return gulp.src('dist/fonts/*', {read: false})
+    .pipe(clean());
+});
+
+// Delete task
+gulp.task('clean', ['clean:html', 'clean:images', 'clean:fonts']);
+
 // Dev task
 gulp.task('dev', ['css', 'js:concat', 'browserSync'], function() {
   gulp.watch('./src/scss/*.scss', ['css']);
@@ -93,7 +116,7 @@ gulp.task('dev', ['css', 'js:concat', 'browserSync'], function() {
 });
 
 // Build task
-gulp.task('build', ['css', 'js', 'replace', 'copy']);
+gulp.task('build', ['clean', 'css', 'js', 'replace', 'copy']);
 
 // Default task
 gulp.task('default', ['dev']);
