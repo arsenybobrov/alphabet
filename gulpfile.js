@@ -55,10 +55,11 @@ gulp.task('js:minify', function() {
 // JS
 gulp.task('js', ['js:concat', 'js:minify']);
 
-// Replace strings for production
+// Copy .html and replace strings for production
 gulp.task('replace', function(){
   gulp.src(['./src/*.html'])
     .pipe(replace('../dist/assets/', './assets/'))
+    .pipe(replace('images/', './assets/images/'))
     .pipe(gulp.dest('./dist/'));
 });
 
@@ -69,6 +70,21 @@ gulp.task('browserSync', function() {
   });
 });
 
+// Copy images directory
+gulp.task('copy:images', function () {
+  gulp.src('./src/images/*')
+    .pipe(gulp.dest('./dist/assets/images/'));
+});
+
+// Copy fonts directory
+gulp.task('copy:fonts', function () {
+  gulp.src('./src/fonts/*')
+    .pipe(gulp.dest('./dist/assets/fonts/'));
+});
+
+// Copy task
+gulp.task('copy', ['copy:images', 'copy:fonts']);
+
 // Dev task
 gulp.task('dev', ['css', 'js:concat', 'browserSync'], function() {
   gulp.watch('./src/scss/*.scss', ['css']);
@@ -77,7 +93,9 @@ gulp.task('dev', ['css', 'js:concat', 'browserSync'], function() {
 });
 
 // Build task
-gulp.task('build', ['css', 'js', 'replace']);
+gulp.task('build', ['css', 'js', 'replace', 'copy']);
 
 // Default task
 gulp.task('default', ['dev']);
+
+// TODO: vendor libs, run server, delete dist first when building
