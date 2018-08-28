@@ -2,12 +2,23 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var header = require('gulp-header');
 var cleanCSS = require('gulp-clean-css');
-var rename = require("gulp-rename");
+var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var browserSync = require('browser-sync').create();
 var concat = require('gulp-concat');
 var replace = require('gulp-replace');
 var clean = require('gulp-clean');
+var merge = require('merge-stream');
+
+// handle vendor
+var vendors = ['jquery/dist', 'lodash'];
+
+gulp.task('vendors', function() {
+  return merge(vendors.map(function(vendor) {
+    return gulp.src('node_modules/' + vendor + '/**/*')
+      .pipe(gulp.dest('./dist/assets/js/vendors/' + vendor.replace(/\/.*/, '')));
+  }));
+});
 
 // Compile SCSS
 gulp.task('css:compile', function() {
@@ -61,6 +72,7 @@ gulp.task('replace', function(){
   gulp.src(['./src/*.html'])
     .pipe(replace('../dist/assets/', './assets/'))
     .pipe(replace('images/', './assets/images/'))
+    .pipe(replace('main.js/', 'main.min.js'))
     .pipe(gulp.dest('./dist/'));
 });
 
@@ -109,16 +121,16 @@ gulp.task('clean:fonts', function () {
 gulp.task('clean', ['clean:html', 'clean:images', 'clean:fonts']);
 
 // Dev task
-gulp.task('dev', ['css', 'js:concat', 'browserSync'], function() {
+gulp.task('dev', ['vendors', 'css', 'js:concat', 'browserSync'], function() {
   gulp.watch('./src/scss/*.scss', ['css']);
   gulp.watch('./src/js/*.js', ['js']);
   gulp.watch('./src/*.html').on('change', browserSync.reload);
 });
 
 // Build task
-gulp.task('build', ['clean', 'css', 'js', 'replace', 'copy']);
+gulp.task('build', ['clean', 'css', 'js', 'replace', 'copy', 'vendors']);
 
 // Default task
 gulp.task('default', ['dev']);
 
-// TODO: vendor libs, run server, delete dist first when building
+// TODO: run server
