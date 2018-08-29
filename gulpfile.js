@@ -141,5 +141,3 @@ gulp.task('build', ['clean', 'css', 'js', 'replace', 'copy', 'vendors']);
 
 // Default task
 gulp.task('default', ['dev']);
-
-// TODO: run server
