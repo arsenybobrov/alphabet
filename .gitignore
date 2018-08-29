@@ -1,6 +1,8 @@
 
 dist/
 
+src/temp/
+
 node_modules/
 
 \.idea/
