@@ -1,4 +1,4 @@
-# vorfreude
+# alphabet
 simple setup | gulp, scss, js concat, local server and live reload
 
 ### install:
