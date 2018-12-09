@@ -9,6 +9,16 @@ var concat = require('gulp-concat');
 var replace = require('gulp-replace');
 var clean = require('gulp-clean');
 var merge = require('merge-stream');
+var pug = require('gulp-pug');
+
+// Configure the gulp task
+gulp.task('pug', function(){
+  return gulp.src(['src/pug/*.pug','!src/pug/components/*.pug'])
+    .pipe(pug({
+        pretty: true
+      }))
+    .pipe(gulp.dest('src/'))
+});
 
 // Configure the browserSync task
 gulp.task('browserSync', function() {
@@ -39,7 +49,7 @@ gulp.task('css:compile', function() {
 });
 
 // Minify CSS
-gulp.task('css:minify', ['css:compile'], function() {
+gulp.task('css:minify', gulp.series('css:compile'), function() {
   return gulp.src([
       './src/temp/assets/css/*.css',
       '!./src/temp/assets/css/*.min.css'
@@ -53,7 +63,7 @@ gulp.task('css:minify', ['css:compile'], function() {
 });
 
 // CSS
-gulp.task('css', ['css:compile', 'css:minify']);
+gulp.task('css', gulp.series('css:compile', 'css:minify'));
 
 // Concat JavaScript
 gulp.task('js:concat', function() {
@@ -74,11 +84,11 @@ gulp.task('js:minify', function() {
 });
 
 // JS
-gulp.task('js', ['js:concat', 'js:minify']);
+gulp.task('js', gulp.series('js:concat', 'js:minify'));
 
 // Copy .html and replace strings for production
 gulp.task('replace', function(){
-  gulp.src(['./src/*.html'])
+   return gulp.src(['./src/*.html'])
     .pipe(replace('./temp/assets/', './assets/'))
     .pipe(replace('./images/', './assets/images/'))
     .pipe(replace('main.js', 'main.min.js'))
@@ -88,24 +98,24 @@ gulp.task('replace', function(){
 
 // Copy images directory
 gulp.task('copy:images', function () {
-  gulp.src('./src/images/**/*')
+  return gulp.src('./src/images/**/*')
     .pipe(gulp.dest('./dist/assets/images/'));
 });
 
 // Copy fonts directory
 gulp.task('copy:fonts', function () {
-  gulp.src('./src/fonts/**/*')
+  return gulp.src('./src/fonts/**/*')
     .pipe(gulp.dest('./dist/assets/fonts/'));
 });
 
 // Copy temp directory
 gulp.task('copy:temp', function () {
-  gulp.src('./src/temp/assets/**/*')
+  return gulp.src('./src/temp/assets/**/*')
     .pipe(gulp.dest('./dist/assets/'));
 });
 
 // Copy task
-gulp.task('copy', ['copy:images', 'copy:fonts', 'copy:temp']);
+gulp.task('copy', gulp.series('copy:images', 'copy:fonts', 'copy:temp'));
 
 
 // Delete html
@@ -126,18 +136,21 @@ gulp.task('clean:fonts', function () {
     .pipe(clean());
 });
 
-gulp.task('clean', ['clean:html', 'clean:images', 'clean:fonts']);
+gulp.task('clean', gulp.series('clean:html', 'clean:images', 'clean:fonts'));
 
 
 // Dev task
-gulp.task('dev', ['vendors', 'css', 'js:concat', 'browserSync'], function() {
+gulp.task('dev', gulp.series('vendors', 'css', 'js:concat', 'browserSync'), function() {
   gulp.watch('./src/scss/*.scss', ['css']).on('change', browserSync.reload);
   gulp.watch('./src/js/*.js', ['js']);
   gulp.watch('./src/*.html').on('change', browserSync.reload);
 });
 
-// Build task
-gulp.task('build', ['clean', 'css', 'js', 'replace', 'copy', 'vendors']);
+// Build pug task
+gulp.task('build', gulp.series('clean', 'pug', 'css', 'js', 'replace', 'copy', 'vendors'));
+
+// Build html task
+gulp.task('build-html', gulp.series('clean', 'css', 'js', 'replace', 'copy', 'vendors'));
 
 // Default task
-gulp.task('default', ['dev']);
+gulp.task('default', gulp.series('dev'));
