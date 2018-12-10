@@ -1,7 +1,7 @@
 {
     "title": "alphabet",
     "name": "alphabet",
-    "version": "1.3.1",
+    "version": "2.1.0",
     "devDependencies": {
         "browser-sync": "^2.24.4",
         "gulp": "^4.0.0",

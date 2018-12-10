@@ -138,11 +138,17 @@ gulp.task('clean:fonts', function () {
 
 gulp.task('clean', gulp.series('clean:html', 'clean:images', 'clean:fonts'));
 
-
-// Dev task
+// Dev pug task
 gulp.task('dev', gulp.series('vendors', 'css', 'js:concat', 'browserSync'), function() {
   gulp.watch('./src/scss/*.scss', ['css']).on('change', browserSync.reload);
-  gulp.watch('./src/js/*.js', ['js']);
+  gulp.watch('./src/js/*.js', ['js']).on('change', browserSync.reload);
+  gulp.watch('./src/*.html').on('change', browserSync.reload);
+});
+
+// Dev html task
+gulp.task('dev-html', gulp.series('vendors', 'css', 'js:concat', 'browserSync'), function() {
+  gulp.watch('./src/scss/*.scss', ['css']).on('change', browserSync.reload);
+  gulp.watch('./src/js/*.js', ['js']).on('change', browserSync.reload);
   gulp.watch('./src/*.html').on('change', browserSync.reload);
 });
 
