@@ -22,6 +22,9 @@ add pug mixins into src/pug/components/siteframe.pug
 ### build if working inside html:
 ```gulp build-html```
 
+### deploy:
+deploy the generated dist directory
+
 ### handle vendors:
 update array in gulpfile.js, var vendors
 
