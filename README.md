@@ -6,7 +6,7 @@ simple setup | pug, gulp, scss, js concat, local server and live reload
 
 ### pug vs. html:
 work in src/*.html files OR use pug templating in src/pug/*.pug. don't do both ;)
-delete src/_dummy.html if working with pug.
+delete src/__dummy.html if working with pug.
 
 add pug mixins into src/pug/components/siteframe.pug
 
