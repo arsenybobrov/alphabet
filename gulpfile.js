@@ -1,6 +1,5 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
-var header = require('gulp-header');
 var cleanCSS = require('gulp-clean-css');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
@@ -25,7 +24,8 @@ gulp.task('browserSync', function() {
   browserSync.init({
     server: {
       baseDir: "./src/"
-    }
+    },
+    port: 3000
   });
 });
 
@@ -139,18 +139,14 @@ gulp.task('clean:fonts', function () {
 gulp.task('clean', gulp.series('clean:html', 'clean:images', 'clean:fonts'));
 
 // Dev pug task
-gulp.task('dev', gulp.series('vendors', 'css', 'js:concat', 'browserSync'), function() {
-  gulp.watch('./src/scss/*.scss', ['css']).on('change', browserSync.reload);
-  gulp.watch('./src/js/*.js', ['js']).on('change', browserSync.reload);
-  gulp.watch('./src/*.html').on('change', browserSync.reload);
-});
+gulp.task('dev', gulp.series('vendors', 'css', 'js:concat', 'browserSync'));
 
 // Dev html task
-gulp.task('dev-html', gulp.series('vendors', 'css', 'js:concat', 'browserSync'), function() {
-  gulp.watch('./src/scss/*.scss', ['css']).on('change', browserSync.reload);
-  gulp.watch('./src/js/*.js', ['js']).on('change', browserSync.reload);
-  gulp.watch('./src/*.html').on('change', browserSync.reload);
-});
+// gulp.task('dev-html', gulp.series('vendors', 'css', 'js:concat', 'browserSync'), function() {
+  // gulp.watch('./src/scss/*.scss', ['css']).on('change', browserSync.reload);
+  // gulp.watch('./src/js/*.js', ['js']).on('change', browserSync.reload);
+  // gulp.watch('./src/*.html').on('change', browserSync.reload);
+// });
 
 // Build pug task
 gulp.task('build', gulp.series('clean', 'pug', 'css', 'js', 'replace', 'copy', 'vendors'));
