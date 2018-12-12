@@ -11,7 +11,12 @@ var merge = require('merge-stream');
 var pug = require('gulp-pug');
 
 // Configure the gulp task
-gulp.task('pug', function(){
+gulp.task('clean:devHtml', function () {
+  return gulp.src('./src/*.html', {read: false})
+    .pipe(clean());
+});
+
+gulp.task('pug', ['clean:devHtml'], function(){
   return gulp.src(['src/pug/*.pug','!src/pug/components/*.pug'])
     .pipe(pug({
         pretty: true
@@ -145,10 +150,15 @@ gulp.task('dev-html', ['vendors', 'css', 'js:concat', 'browserSync'], function()
   gulp.watch('./src/*.html').on('change', browserSync.reload);
 });
 
-// Build html task
-gulp.task('build-html', ['clean', 'css', 'js', 'replace', 'copy', 'vendors']);
+// Dev pug task
+gulp.task('dev', ['vendors', 'css', 'js:concat', 'browserSync'], function() {
+  gulp.watch('./src/scss/*.scss', ['css']).on('change', browserSync.reload);
+  gulp.watch('./src/js/*.js', ['js']);
+  gulp.watch('./src/pug/**/*.pug', ['pug']);
+  gulp.watch('./src/*.html').on('change', browserSync.reload);
+});
 
-// Build pug task
+// Build task
 gulp.task('build', ['clean', 'css', 'js', 'replace', 'copy', 'vendors']);
 
 // Default task
