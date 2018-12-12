@@ -49,7 +49,7 @@ gulp.task('css:compile', function() {
 });
 
 // Minify CSS
-gulp.task('css:minify', gulp.series('css:compile'), function() {
+gulp.task('css:minify', ['css:compile'], function() {
   return gulp.src([
       './src/temp/assets/css/*.css',
       '!./src/temp/assets/css/*.min.css'
@@ -63,7 +63,7 @@ gulp.task('css:minify', gulp.series('css:compile'), function() {
 });
 
 // CSS
-gulp.task('css', gulp.series('css:compile', 'css:minify'));
+gulp.task('css', ['css:compile', 'css:minify']);
 
 // Concat JavaScript
 gulp.task('js:concat', function() {
@@ -84,7 +84,7 @@ gulp.task('js:minify', function() {
 });
 
 // JS
-gulp.task('js', gulp.series('js:concat', 'js:minify'));
+gulp.task('js', ['js:concat', 'js:minify']);
 
 // Copy .html and replace strings for production
 gulp.task('replace', function(){
@@ -115,7 +115,7 @@ gulp.task('copy:temp', function () {
 });
 
 // Copy task
-gulp.task('copy', gulp.series('copy:images', 'copy:fonts', 'copy:temp'));
+gulp.task('copy', ['copy:images', 'copy:fonts', 'copy:temp']);
 
 
 // Delete html
@@ -136,23 +136,20 @@ gulp.task('clean:fonts', function () {
     .pipe(clean());
 });
 
-gulp.task('clean', gulp.series('clean:html', 'clean:images', 'clean:fonts'));
-
-// Dev pug task
-gulp.task('dev', gulp.series('vendors', 'css', 'js:concat', 'browserSync'));
+gulp.task('clean', ['clean:html', 'clean:images', 'clean:fonts']);
 
 // Dev html task
-// gulp.task('dev-html', gulp.series('vendors', 'css', 'js:concat', 'browserSync'), function() {
-  // gulp.watch('./src/scss/*.scss', ['css']).on('change', browserSync.reload);
-  // gulp.watch('./src/js/*.js', ['js']).on('change', browserSync.reload);
-  // gulp.watch('./src/*.html').on('change', browserSync.reload);
-// });
-
-// Build pug task
-gulp.task('build', gulp.series('clean', 'pug', 'css', 'js', 'replace', 'copy', 'vendors'));
+gulp.task('dev-html', ['vendors', 'css', 'js:concat', 'browserSync'], function() {
+  gulp.watch('./src/scss/*.scss', ['css']).on('change', browserSync.reload);
+  gulp.watch('./src/js/*.js', ['js']);
+  gulp.watch('./src/*.html').on('change', browserSync.reload);
+});
 
 // Build html task
-gulp.task('build-html', gulp.series('clean', 'css', 'js', 'replace', 'copy', 'vendors'));
+gulp.task('build-html', ['clean', 'css', 'js', 'replace', 'copy', 'vendors']);
+
+// Build pug task
+gulp.task('build', ['clean', 'css', 'js', 'replace', 'copy', 'vendors']);
 
 // Default task
-gulp.task('default', gulp.series('dev'));
+gulp.task('default', ['dev']);
