@@ -10,7 +10,7 @@ update array in ```gulpfile.js```, var vendors
 ### pug vs. html:
 work in ```src/*.html``` files OR use pug templating in ```src/pug/*.pug```. don't do both ;)
 
-#pug
+# pug
 add pug mixins into ```src/pug/components/siteframe.pug```
 
 ### handle vendors:
@@ -19,7 +19,7 @@ update vendors import in ```src/pug/components/siteframe.pug```
 ### dev:
 ```gulp dev```
 
-#html
+# html
 ### handle vendors:
 update vendors import in ```*.html``` file(s)
 
