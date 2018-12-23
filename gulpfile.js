@@ -25,7 +25,19 @@ gulp.task('pug', ['clean:devHtml'], function(){
 });
 
 // Configure the browserSync task
-gulp.task('browserSync', function() {
+// pug
+gulp.task('browserSync', ['pug'], function() {
+  browserSync.init({
+    server: {
+      baseDir: "./src/"
+    },
+    port: 3000
+  });
+});
+
+// Configure the browserSync task
+// html
+gulp.task('browserSync-html', function() {
   browserSync.init({
     server: {
       baseDir: "./src/"
@@ -144,7 +156,7 @@ gulp.task('clean:fonts', function () {
 gulp.task('clean', ['clean:html', 'clean:images', 'clean:fonts']);
 
 // Dev html task
-gulp.task('dev-html', ['vendors', 'css', 'js:concat', 'browserSync'], function() {
+gulp.task('dev-html', ['vendors', 'css', 'js:concat', 'browserSync-html'], function() {
   gulp.watch('./src/scss/*.scss', ['css']).on('change', browserSync.reload);
   gulp.watch('./src/js/*.js', ['js']);
   gulp.watch('./src/*.html').on('change', browserSync.reload);
